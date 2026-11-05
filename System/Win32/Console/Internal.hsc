@@ -25,6 +25,7 @@ module System.Win32.Console.Internal where
 #include "wincon_compat.h"
 
 import System.Win32.Types
+import System.Win32.Process (ProcessId)
 import Graphics.Win32.GDI.Types (COLORREF)
 
 import Foreign.C.Types (CInt(..), CWchar)
@@ -32,6 +33,18 @@ import Foreign.C.String (CWString)
 import Foreign.Ptr (Ptr, plusPtr)
 import Foreign.Storable (Storable(..))
 import Foreign.Marshal.Array (peekArray, pokeArray)
+
+foreign import WINDOWS_CCONV safe "windows.h AllocConsole"
+        c_AllocConsole :: IO BOOL
+
+--foreign import WINDOWS_CCONV safe "windows.h AllocConsoleWithOptions"
+--        c_AllocConsoleWithOptions :: ... -> ... -> IO BOOL
+
+foreign import WINDOWS_CCONV safe "windows.h AttachConsole"
+        c_AttachConsole :: ProcessId -> IO BOOL
+
+foreign import WINDOWS_CCONV safe "windows.h FreeConsole"
+        c_FreeConsole :: IO BOOL
 
 foreign import WINDOWS_CCONV unsafe "windows.h GetConsoleMode"
         c_GetConsoleMode :: HANDLE -> LPDWORD -> IO BOOL

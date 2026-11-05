@@ -78,6 +78,7 @@ module System.Win32.Console (
 
 import Data.Char (chr)
 import System.Win32.Types
+import System.Win32.Process (ProcessId)
 import System.Win32.String
 import System.Win32.Console.Internal
 import Graphics.Win32.Misc
@@ -92,6 +93,14 @@ import Foreign.Storable (Storable(..))
 import Foreign.Marshal.Array (peekArray, peekArray0)
 import Foreign.Marshal.Alloc (alloca)
 
+allocConsole :: IO ()
+allocConsole = failIfFalse_ "AllocConsole" $ c_AllocConsole
+
+attachConsole :: ProcessId -> IO ()
+attachConsole pid = failIfFalse_ "AttachConsole" $ c_AttachConsole pid
+
+freeConsole :: IO ()
+freeConsole = failIfFalse_ "FreeConsole" $ c_FreeConsole
 
 getConsoleMode :: HANDLE -> IO DWORD
 getConsoleMode h = alloca $ \ptr -> do
